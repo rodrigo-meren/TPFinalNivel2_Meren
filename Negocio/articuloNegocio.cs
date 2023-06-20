@@ -71,6 +71,7 @@ namespace Negocio
                 datos.setearParametro("IdCategoria", nuevo.Categoria.Id);
                 datos.setearParametro("Precio", nuevo.Precio);
 
+
                 datos.ejecutarAccion();
 
 
@@ -100,6 +101,8 @@ namespace Negocio
             datos.setearParametro("Id", Articulo.Id);
 
             datos.ejecutarAccion();
+
+            datos.cerrarConexion();
 
         }
         public void eliminarFisico(int id)

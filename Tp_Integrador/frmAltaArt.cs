@@ -24,47 +24,58 @@ namespace Tp_Integrador
         {
             InitializeComponent();
         }
-            public frmAltaArt(Articulos articulo)
-            {
-                InitializeComponent();
-                this.articulo = articulo;
-                Text = "Modificar Articulo";
-            }
+        public frmAltaArt(Articulos articulo)
+        {
+            InitializeComponent();
+            this.articulo = articulo;
+            Text = "Modificar Articulo";
+        }
 
-            private void frmAltaArt_Load(object sender, EventArgs e)
+        private void frmAltaArt_Load(object sender, EventArgs e)
+        {
+            MarcasNegocio marcaNegocio = new MarcasNegocio();
+            CategoriasNegocio categoriaNegocio = new CategoriasNegocio();
+            btnAceptar.Enabled = false;
+            try
             {
-                MarcasNegocio marcaNegocio = new MarcasNegocio();
-                CategoriasNegocio categoriaNegocio = new CategoriasNegocio();
-                try
+                cboMarca.DataSource = marcaNegocio.listar();
+                cboMarca.ValueMember = "Id";
+                cboMarca.DisplayMember = "Descripcion";
+                cboCategoria.DataSource = categoriaNegocio.listar();
+                cboCategoria.ValueMember = "Id";
+                cboCategoria.DisplayMember = "Descripcion";
+
+
+
+
+                if (articulo != null)
                 {
-                    cboMarca.DataSource = marcaNegocio.listar();
-                    cboMarca.ValueMember = "Id";
-                    cboMarca.DisplayMember = "Descripcion";
-                    cboCategoria.DataSource = categoriaNegocio.listar();
-                    cboCategoria.ValueMember = "Id";
-                    cboCategoria.DisplayMember = "Descripcion";
+                    txtCodigo.Text = articulo.Codigo;
+                    txtNombre.Text = articulo.Nombre;
+                    txtDescripcion.Text = articulo.Descripcion;
+                    txtImagenUrl.Text = articulo.ImagenUrl;
 
-                    if (articulo != null)
-                    {
-                        txtCodigo.Text = articulo.Codigo;
-                        txtNombre.Text = articulo.Nombre;
-                        txtDescripcion.Text = articulo.Descripcion;
-                        txtImagenUrl.Text = articulo.ImagenUrl;
-
-                        cboMarca.SelectedValue = articulo.IdMarca;
-                        cboCategoria.SelectedValue = articulo.IdCategoria;
-                        txtPrecio.Text = articulo.Precio.ToString();
-                        cargarImagen(articulo.ImagenUrl);
-                    }
-
+                    cboMarca.SelectedValue = articulo.IdMarca;
+                    cboCategoria.SelectedValue = articulo.IdCategoria;
+                    txtPrecio.Text = articulo.Precio.ToString();
+                    cargarImagen(articulo.ImagenUrl);
 
                 }
-                catch (Exception ex)
-                {
 
-                    MessageBox.Show(ex.ToString());
-                }
+
             }
+            catch (Exception ex)
+            {
+
+                MessageBox.Show(ex.ToString());
+            }
+        }
+        private void validarCampos()
+        {
+            var val = !string.IsNullOrEmpty(txtCodigo.Text) && !string.IsNullOrEmpty(txtNombre.Text) && !string.IsNullOrEmpty(txtPrecio.Text);
+            btnAceptar.Enabled = val;
+
+        }
         private void btnCancelar_Click(object sender, EventArgs e)
         {
             Close();
@@ -73,33 +84,39 @@ namespace Tp_Integrador
         private void btnAceptar_Click(object sender, EventArgs e)
         {
 
+
             articuloNegocio negocio = new articuloNegocio();
             try
             {
+
                 if (articulo == null)
                     articulo = new Articulos();
 
-                articulo.Codigo = txtCodigo.Text;                
+                articulo.Codigo = txtCodigo.Text;
                 articulo.Nombre = txtNombre.Text;
-                articulo.Descripcion = txtDescripcion.Text;                
+                articulo.Descripcion = txtDescripcion.Text;
                 articulo.ImagenUrl = txtImagenUrl.Text;
                 articulo.Marca = (Marcas)cboMarca.SelectedItem;
                 articulo.Categoria = (Categorias)cboCategoria.SelectedItem;
                 articulo.Precio = decimal.Parse(txtPrecio.Text);
 
+
+
                 if (articulo.Id != 0)
                 {
+
                     negocio.modificar(articulo);
                     MessageBox.Show("Modificado Exitosamente");
                 }
                 else
                 {
+
                     negocio.agregar(articulo);
                     MessageBox.Show("Agregado Exitosamente");
 
                 }
                 if (archivo != null && (!txtImagenUrl.Text.ToUpper().Contains("HTTP")))
-                    File.Copy(archivo.FileName, ConfigurationManager.AppSettings["Articulos-Img"] + archivo.SafeFileName + articulo.Codigo );
+                    File.Copy(archivo.FileName, ConfigurationManager.AppSettings["Articulos-Img"] + archivo.SafeFileName + articulo.Codigo);
 
 
                 Close();
@@ -135,14 +152,40 @@ namespace Tp_Integrador
             archivo.Filter = "jpg|*.jpg;|png|*.png";
             if (archivo.ShowDialog() == DialogResult.OK)
             {
-                txtImagenUrl.Text = archivo.FileName ; 
+                txtImagenUrl.Text = archivo.FileName;
                 cargarImagen(archivo.FileName);
-               // File.Copy(archivo.FileName, ConfigurationManager.AppSettings["Articulos-Img"]  + articulo.Codigo + archivo.SafeFileName);
+
 
             }
         }
 
-        
-       
+        private void txtCodigo_TextChanged(object sender, EventArgs e)
+        {
+            validarCampos();
+            lblReqCod.Visible = false;
+        }
+
+        private void txtNombre_TextChanged(object sender, EventArgs e)
+        {
+            validarCampos();
+            lblReqNombre.Visible = false;
+        }
+
+        private void txtPrecio_TextChanged(object sender, EventArgs e)
+        {
+
+            validarCampos();
+            lblReqPrecio.Visible = false;
+        }
+
+        private void txtPrecio_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            
+            if (!char.IsDigit(e.KeyChar) && (e.KeyChar !=(char) Keys.Back) || e.KeyChar == 44)
+            {
+                MessageBox.Show("solo Números", "Alerta", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                e.Handled = true;
+            }
+        }
     }
 }

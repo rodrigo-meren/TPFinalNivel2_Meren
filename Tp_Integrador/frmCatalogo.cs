@@ -182,7 +182,7 @@ namespace Tp_Integrador
             return false;
         }
 
-        private bool soloNumeros(string cadena)
+        public bool soloNumeros(string cadena)
         {
             foreach (char caracter in cadena)
             {
@@ -233,13 +233,26 @@ namespace Tp_Integrador
 
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void btnDetalle_Click(object sender, EventArgs e)
         {
             Articulos seleccionado;
             seleccionado = (Articulos)dgvArticulos.CurrentRow.DataBoundItem;
-            frmDetalle alta = new frmDetalle(seleccionado);
-            alta.ShowDialog();
+            frmDetalle Detalle = new frmDetalle(seleccionado);
+            Detalle.ShowDialog();
             cargar();
+        }
+
+        private void btnAgregarMarca_Click(object sender, EventArgs e)
+        {
+            frmMarca Marca = new frmMarca();
+            Marca.ShowDialog();
+        }
+
+        private void btnAgregarCat_Click(object sender, EventArgs e)
+        {
+            frmCategoria categoria = new frmCategoria();
+            categoria.ShowDialog();
+
         }
     }
 }
