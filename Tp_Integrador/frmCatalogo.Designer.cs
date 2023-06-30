@@ -53,7 +53,7 @@
             // 
             // dgvArticulos
             // 
-            this.dgvArticulos.BackgroundColor = System.Drawing.Color.Silver;
+            this.dgvArticulos.BackgroundColor = System.Drawing.Color.RoyalBlue;
             this.dgvArticulos.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvArticulos.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
             this.dgvArticulos.Location = new System.Drawing.Point(30, 89);

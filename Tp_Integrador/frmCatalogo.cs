@@ -43,6 +43,11 @@ namespace Tp_Integrador
             
 
         }
+        private void columnaDecimales()
+        {
+
+            dgvArticulos.Columns["Precio"].DefaultCellStyle.Format = "0,00";
+        }
         private void cargar()
         {
             articuloNegocio negocio = new articuloNegocio();
@@ -52,6 +57,7 @@ namespace Tp_Integrador
                 dgvArticulos.DataSource = listaArticulos;
                 ocultarColumnas();
                 cargarImagen(listaArticulos[0].ImagenUrl);
+                columnaDecimales();
 
             }
             catch (Exception ex)
